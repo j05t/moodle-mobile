@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodle Mobile</title>
+		<link rel="stylesheet" href="css/base.css" type="text/css" />
+		<script src="js/core.js" defer></script>
+		<script src="js/moodle.js" defer></script>
+  </head>
+  <body>
+		<main>
+      <header>
+        <img src="img/logo.svg"/>
+      </header>
+			
+      <div id="login" class="hide">
+        <label>Username:</label>
+        <input type="text" placeholder="Enter Username" id="username" value="" required>
+
+        <label>Password:</label>
+        <input type="password" placeholder="Enter Password" id="password" value="" required>
+
+        <button type="button" onclick="moodle.authenticate()">Login</button>
+        <label id="login-error"></label>
+      </div>  
+
+      <div id="content"></div>
+		</main>
+
+    <footer>
+      <div class="container">
+        <aside id="loading" class="hide">
+          <img src="img/ripple.svg"/>
+          <label id="state-text"></label>
+        </aside>
+        <nav id="navigation">
+          <ul>
+            <li><a href="#" onclick="moodle.logout(event);"><img src="img/exit.svg"/></a></li>
+            <li><a href="#" onclick="moodle.rooms(event);"><img src="img/skype.svg"/></a></li>
+            <li><a href="#" onclick="moodle.home(event);"><img src="img/home.svg"/></a></li>
+          </ul>        
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
