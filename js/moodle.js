@@ -34,7 +34,7 @@ var moodle = {
 		var url = urls.getToken + '?username=' + username + '&password=' + password + '&service=moodle_mobile_app';
 		
 		if(isEmpty(username) || isEmpty(password)) {
-			core.setText('login-error', 'Please enter username and password');
+			core.setText('login-error', 'Please enter username and password.');
 			return;
 		}
 
@@ -44,7 +44,7 @@ var moodle = {
 			moodle.disableLoading();
 			
 			if(state == responseState.ERROR) {
-				core.setText('login-error', 'Something went wrong during login');
+				core.setText('login-error', 'Something went wrong during login.');
 				return;
 			}
 
