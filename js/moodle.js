@@ -63,7 +63,7 @@ var moodle = {
 		clearTimeout(moodle.loadingTimer);
 		moodle.loadingTimer = setTimeout(moodle.disableLoading, 10000);
 
-		core.setText('state-text', text)
+		// core.setText('state-text', text)
 		core.removeClass('loading', 'hide');
 	},
 
