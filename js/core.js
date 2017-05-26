@@ -20,16 +20,16 @@ var core = {
 		console.err("Couldn't init storage.");
 	},
 	
-	getJSON: function(url, callback) {
+	getJSON: function(url, callback, element) {
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url, true);
 		xhr.responseType = 'json';
 		xhr.onload = function() {
 			var status = xhr.status;
 			if (status == 200) {
-				callback(responseState.SUCCESS, xhr.response);
+				callback(responseState.SUCCESS, xhr.response, element);
 			} else {
-				callback(responseState.ERROR, null);
+				callback(responseState.ERROR, null, element);
 			}
 		};
 		xhr.send();

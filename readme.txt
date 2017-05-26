@@ -50,3 +50,5 @@ see also:
 &wsfunction=gradereport_user_get_grades_table&courseid=1513&userid=314
 // Submissions
 &wsfunction=mod_assign_get_assignments
+
+mod_resource_get_resources_by_courses	

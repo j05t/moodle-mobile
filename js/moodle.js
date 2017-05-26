@@ -11,7 +11,7 @@ var moodle = {
 		if(moodle.isAuthenticated()) {
 			core.hide('login');
 			core.show('navigation');
-			moodle.home();
+			moodle.lvs();
 		}
 		else {
 			moodle.login();
@@ -188,6 +188,100 @@ var moodle = {
 			var content = document.getElementById('content');
 			content.innerHTML = '';
 			content.appendChild(wrapper);
+		});
+	},
+
+	lvs: function() {
+		moodle.enableLoading('Loading LVs ..');
+
+		var url = urls.api + '?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses'
+			+'&userid=314' 
+			+'&wstoken=' + core.session.token;
+
+		core.getJSON(url, function(state, data) {
+			moodle.disableLoading();
+		
+			if(state == responseState.ERROR) {
+				console.err('Couldn\'t receive data.');
+				return;
+			}
+
+			var content = document.getElementById('content');
+			content.innerHTML = '';
+
+			var ignoredLvs = [
+				'Sekretariat (ITM)', 
+				'Sekretariat (SWD)', 
+				'Sekretariat (IMS)', 
+				'Sekretariat (IRM)', 
+				'Secretariat (ASE)', 
+				'Online Rooms', 
+				'Support'];
+
+			for (var i = 0; i < data.length; i++) {
+				var lv = data[i];
+
+				// skip ignored lvs
+				if(ignoredLvs.includes(lv.fullname))
+					continue;
+
+				var div = document.createElement('div');
+				div.classList.add('lv');
+
+				var h3 = document.createElement('h3');
+				h3.innerText = lv.fullname;
+				h3.onclick = function() {
+					this.parentElement.classList.toggle('expanded')
+				};
+
+				div.appendChild(h3);
+				content.appendChild(div);	
+
+				var detailsUrl = urls.api + '?moodlewsrestformat=json&wsfunction=core_course_get_contents'
+					+'&courseid=' + lv.id
+					+'&wstoken=' + core.session.token;
+
+				core.getJSON(detailsUrl, function(state, data, element) {
+
+					if(state == responseState.ERROR) {
+						console.err('Couldn\'t receive data.');
+						return;
+					}
+
+					var numberOfFiles = 0;
+
+					for(var i = 0; i < data.length; i++) {
+						var modules = data[i].modules;
+						for(var j = 0; j < modules.length; j++) {
+							var module = modules[j];
+							if(module.modname !== 'resource')
+								continue;
+
+							var contents = module.contents[0];
+
+							var img = document.createElement('img');
+							img.src = module.modicon;
+
+							var span = document.createElement('span');
+							span.innerText = contents.filename;	
+
+							var a = document.createElement('a');
+							a.href = contents.fileurl +'&token=' + core.session.token;
+							a.target = '_blank';					
+
+							a.appendChild(img);
+							a.appendChild(span);
+
+							element.appendChild(a);
+							numberOfFiles++;
+						}
+					}
+
+					var h3 = element.childNodes[0];
+					h3.innerText = h3.innerText + '(' + numberOfFiles +')'
+
+				}, div);
+			}
 		});
 	}
 };
