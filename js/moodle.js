@@ -3,6 +3,23 @@ var urls = {
 	api: 'https://elearning.fh-joanneum.at/webservice/rest/server.php'
 };
 
+var sort_by = function (field, reverse, primer) {
+
+    var key = primer ?
+        function (x) {
+            return primer(x[field])
+        } :
+        function (x) {
+            return x[field]
+        };
+
+    reverse = !reverse ? 1 : -1;
+
+    return function (a, b) {
+        return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+    }
+}
+
 var moodle = {
 	loadingTimer: null,
 	init: function() {
@@ -74,32 +91,37 @@ var moodle = {
 		core.addClass('loading', 'hide');
 	},
 
-	showTable: function(data, keys) {
-		var content = document.getElementById('content');
-		var table = document.createElement('table');
+    showTable: function (data, keys) {
+        var content = document.getElementById('content');
+        var table = document.createElement('table');
 
-		for (var i = 0; i < keys.length; i++) {
-			var key = keys[i];
+        for (var j = 0; j < data.length; j++) {
+            for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
 
-			if (data.hasOwnProperty(key) && keys.indexOf(key) > -1) {
+                if (data[j].hasOwnProperty(key) && keys.indexOf(key) > -1) {
 
-				var tr = document.createElement('tr');
-				var tdKey = document.createElement('td');
-				var tdValue = document.createElement('td');
+                    var tr = document.createElement('tr');
+                    var tdKey = document.createElement('td');
+                    var tdValue = document.createElement('td');
 
-				tdKey.innerText = key.toUpperCase();;
-				tr.appendChild(tdKey);
+					if (key == "Name")
+						tr.id = "assignmentheader"; // = "background-color: blue";
 
-				tdValue.innerText = data[key];
-				tr.appendChild(tdValue);
-				
-				table.appendChild(tr);
-			}			
-		}
-		
-		core.setHtml('content', '');
-		content.appendChild(table);	
-	},
+					tdKey.innerText = key;
+                    tr.appendChild(tdKey);
+
+                    tdValue.innerHTML = data[j][key];
+                    tr.appendChild(tdValue);
+
+                    table.appendChild(tr);
+                }
+            }
+        }
+
+        core.setHtml('content', '');
+        content.appendChild(table);
+    },
 
 	login: function() {
 		core.session.removeItem('token');
@@ -126,10 +148,46 @@ var moodle = {
 				console.err('Couldn\'t receive data.');
 				return;
 			}
-
-			moodle.showTable(data[0], ['id', 'username', 'fullname']);
+			moodle.showTable(data, ['id', 'username', 'fullname']);
 		});
 	},
+
+    assignments: function () {
+        moodle.enableLoading('Loading user data ..');
+
+        var url = urls.api + '?moodlewsrestformat=json&wsfunction=mod_assign_get_assignments'
+            + '&wstoken=' + core.session.token;
+
+        core.getJSON(url, function (state, data) {
+            moodle.disableLoading();
+
+            if (state == responseState.ERROR) {
+                console.err('Couldn\'t receive data.');
+                return;
+            }
+
+            var assignments = [];
+            var now = Math.floor(Date.now() / 1000);
+
+            for (var i = 0; i < data.courses.length; i++) {
+                for (var j = 0; j < data.courses[i].assignments.length; j++) {
+                    var name = data.courses[i].assignments[j].name;
+                    var intro = data.courses[i].assignments[j].intro;
+                    var duedate = data.courses[i].assignments[j].duedate;
+
+                    if (duedate > now)
+                        assignments.push({Name: name, Beschreibung: intro, Fällig: duedate});
+                }
+            }
+
+			// sort and convert timestamps to date
+            assignments.sort(sort_by('Fällig', false, parseInt));
+            for (var i = 0; i < assignments.length; i++)
+            	assignments[i].Fällig = new Date(assignments[i].Fällig * 1000)
+
+            moodle.showTable(assignments, ['Name', 'Beschreibung', 'Fällig']);
+        });
+    },
 	
 	rooms: function() {
 		moodle.enableLoading('Loading online rooms ..');
@@ -195,7 +253,7 @@ var moodle = {
 		moodle.enableLoading('Loading LVs ..');
 
 		var url = urls.api + '?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses'
-			+'&userid=314' 
+			+'&userid=314'
 			+'&wstoken=' + core.session.token;
 
 		core.getJSON(url, function(state, data) {

@@ -224,3 +224,7 @@ nav > ul {
 .lv > a > span {
 	margin-left: 10px;
 }
+
+#assignmentheader {
+	background-color: aquamarine;
+}
