@@ -37,7 +37,7 @@ var moodle = {
 		var password = core.getValue('password');
 
 		// TODO: use POST if possible
-		var url = urls.getToken + '?username=' + username + '&password=' + password + '&service=moodle_mobile_app';
+		var url = urls.getToken + '?username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password) + '&service=moodle_mobile_app';
 		
 		if(isEmpty(username) || isEmpty(password)) {
 			core.setText('login-error', 'Please enter username and password.');
@@ -62,7 +62,7 @@ var moodle = {
 			var auhtenticationToken = data.token;
 			var url = urls.api + '?moodlewsrestformat=json&wsfunction=core_user_get_users_by_field' 
 				+'&wstoken=' + auhtenticationToken 
-				+'&field=username&values[0]=' + username;
+				+'&field=username&values[0]=' + encodeURIComponent(username);
 
 			core.getJSON(url, function(state, userdata) {
 				moodle.disableLoading();
