@@ -288,6 +288,8 @@ var moodle = {
 				'Online Rooms', 
 				'Support'];
 
+			var spinner = document.getElementById('spinner-wrapper');
+
 			for (var i = 0; i < data.length; i++) {
 				var lv = data[i];
 
@@ -298,13 +300,21 @@ var moodle = {
 				var div = document.createElement('div');
 				div.classList.add('lv');
 
+				var header = document.createElement('header');
+
+				var aside = document.createElement('aside');
+				aside.innerHTML = spinner.innerHTML;
+
 				var h3 = document.createElement('h3');
 				h3.innerText = lv.fullname;
 				h3.onclick = function() {
-					this.parentElement.classList.toggle('expanded')
+					this.parentElement.parentElement.classList.toggle('expanded')
 				};
 
-				div.appendChild(h3);
+				header.appendChild(aside);
+				header.appendChild(h3);
+
+				div.appendChild(header);
 				content.appendChild(div);	
 
 				var detailsUrl = urls.api + '?moodlewsrestformat=json&wsfunction=core_course_get_contents'
@@ -347,8 +357,8 @@ var moodle = {
 						}
 					}
 
-					var h3 = element.childNodes[0];
-					h3.innerText = h3.innerText + '(' + numberOfFiles +')'
+					var aside = element.childNodes[0].getElementsByTagName('aside')[0];
+					aside.innerText = numberOfFiles;
 
 				}, div);
 			}

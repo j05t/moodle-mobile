@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moodle Mobile</title>
 		<link rel="stylesheet" href="css/base.css" type="text/css" />
+		<link rel="stylesheet" href="css/spinner.css" type="text/css" />
 		<script src="js/core.js" defer></script>
 		<script src="js/moodle.js" defer></script>
   </head>
   <body>
 		<main>
       <header>
+        <!--<a href="#" onclick="moodle.logout(event);"><img src="img/exit.svg"/></a>-->
         <img src="img/logo.svg"/>
       </header>
 
@@ -28,6 +30,16 @@
       </form> 
 
       <div id="content"></div>
+
+      <div id="spinner-wrapper" class="hide">
+        <div class="spinner">
+          <div class="rect1"></div>
+          <div class="rect2"></div>
+          <div class="rect3"></div>
+          <div class="rect4"></div>
+          <div class="rect5"></div>
+        </div>
+      </div>
 		</main>
 
     <footer>
@@ -38,7 +50,6 @@
         </aside>
         <nav id="navigation">
           <ul>
-            <li><a href="#" onclick="moodle.logout(event);"><img src="img/exit.svg"/></a></li>
             <li><a href="#" onclick="moodle.rooms(event);"><img src="img/skype.svg"/></a></li>
             <li><a href="#" onclick="moodle.lvs(event);"><img src="img/assignments.svg"/></a></li>            
             <li><a href="#" onclick="moodle.assignments(event);"><img src="img/home.svg"/></a></li>

@@ -207,13 +207,20 @@ nav > ul {
 	font-size: 0.9em;
 	margin: 5px;
 }
-.lv > h3 {
+.lv > header {
 	display: block;
 	margin:0 0 5px 0;
 	padding: 10px;
 	border: 1px solid #ccc;
 	cursor: pointer;
 	font-size: 1em;
+}
+.lv > header > aside {
+	float: right;
+	font-size: 0.8em;
+}
+.lv > header > h3 {
+	font-size: 0.9em;
 }
 .lv.expanded > a {
 	display: block;
