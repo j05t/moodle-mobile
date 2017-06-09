@@ -13,17 +13,19 @@
       <header>
         <img src="img/logo.svg"/>
       </header>
-			
-      <div id="login" class="hide">
-        <label>Username:</label>
-        <input type="text" placeholder="Enter Username" id="username" value="" required>
 
-        <label>Password:</label>
-        <input type="password" placeholder="Enter Password" id="password" value="" required>
+      <form onsubmit="moodle.authenticate(); return false;">
+        <div id="login" class="hide">
+          <label>Username:</label>
+          <input type="text" placeholder="Enter Username" id="username" value="" required>
 
-        <button type="button" onclick="moodle.authenticate()">Login</button>
-        <label id="login-error"></label>
-      </div>  
+          <label>Password:</label>
+          <input type="password" placeholder="Enter Password" id="password" value="" required>
+
+          <button type="<submit></submit>">Login</button>
+          <label id="login-error"></label>
+        </div> 
+      </form> 
 
       <div id="content"></div>
 		</main>
@@ -38,8 +40,8 @@
           <ul>
             <li><a href="#" onclick="moodle.logout(event);"><img src="img/exit.svg"/></a></li>
             <li><a href="#" onclick="moodle.rooms(event);"><img src="img/skype.svg"/></a></li>
-            <li><a href="#" onclick="moodle.assignments(event);"><img src="img/assignments.svg"/></a></li>
-            <li><a href="#" onclick="moodle.home(event);"><img src="img/home.svg"/></a></li>
+            <li><a href="#" onclick="moodle.lvs(event);"><img src="img/assignments.svg"/></a></li>            
+            <li><a href="#" onclick="moodle.assignments(event);"><img src="img/home.svg"/></a></li>
           </ul>        
         </nav>
       </div>

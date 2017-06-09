@@ -3,23 +3,6 @@ var urls = {
 	api: 'https://elearning.fh-joanneum.at/webservice/rest/server.php'
 };
 
-var sort_by = function (field, reverse, primer) {
-
-    var key = primer ?
-        function (x) {
-            return primer(x[field])
-        } :
-        function (x) {
-            return x[field]
-        };
-
-    reverse = !reverse ? 1 : -1;
-
-    return function (a, b) {
-        return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-    }
-}
-
 var moodle = {
 	loadingTimer: null,
 	init: function() {
@@ -28,7 +11,7 @@ var moodle = {
 		if(moodle.isAuthenticated()) {
 			core.hide('login');
 			core.show('navigation');
-			moodle.lvs();
+			moodle.assignments();
 		}
 		else {
 			moodle.login();
@@ -39,6 +22,9 @@ var moodle = {
 		if(core.session.getItem('token') === null)
 			return false;
 
+		if(core.session.getItem('userid') === null)
+			return false;
+
 		return true;
 	},
 
@@ -46,8 +32,11 @@ var moodle = {
 		core.setText('state-text', '')
 		core.setText('login-error', '')
 
+		// TODO: encode user parameter
 		var username = core.getValue('username');
 		var password = core.getValue('password');
+
+		// TODO: use POST if possible
 		var url = urls.getToken + '?username=' + username + '&password=' + password + '&service=moodle_mobile_app';
 		
 		if(isEmpty(username) || isEmpty(password)) {
@@ -58,7 +47,7 @@ var moodle = {
 		moodle.enableLoading('Auhentication in progress ..');
 		
 		core.getJSON(url, function(state, data) {
-			moodle.disableLoading();
+			// moodle.disableLoading();
 			
 			if(state == responseState.ERROR) {
 				core.setText('login-error', 'Something went wrong during login.');
@@ -70,9 +59,32 @@ var moodle = {
 				return;
 			}
 
-			core.session.username = username;
-			core.session.token = data.token;
-			core.redirect('index.html');
+			var auhtenticationToken = data.token;
+			var url = urls.api + '?moodlewsrestformat=json&wsfunction=core_user_get_users_by_field' 
+				+'&wstoken=' + auhtenticationToken 
+				+'&field=username&values[0]=' + username;
+
+			core.getJSON(url, function(state, userdata) {
+				moodle.disableLoading();
+			
+				if(state == responseState.ERROR) {
+					console.err('Couldn\'t receive data.');
+					return;
+				}
+
+				console.log(userdata);
+
+				var user = userdata[0];
+
+				core.session.token = auhtenticationToken;
+				core.session.userid = user.id;
+				core.session.fullname = user.fullname;
+				core.session.profileimageurl = user.profileimageurl;
+				core.session.profileimageurlsmall = user.profileimageurlsmall;
+				core.session.email = user.email;
+
+				core.redirect('index.html');			
+			});
 		});
 	},
 
@@ -126,6 +138,7 @@ var moodle = {
 	login: function() {
 		core.session.removeItem('token');
 		core.show('login');
+		document.getElementById('username').focus();
 	},
 
 	logout: function(e) {
@@ -134,29 +147,28 @@ var moodle = {
 		core.reload();
 	},
 
-	home: function() {
-		moodle.enableLoading('Loading user data ..');
+	// home: function() {
+	// 	moodle.enableLoading('Loading user data ..');
 
-		var url = urls.api + '?moodlewsrestformat=json&wsfunction=core_user_get_users_by_field' 
-			+'&wstoken=' + core.session.token 
-			+'&field=username&values[0]=' + core.session.username;
+	// 	var url = urls.api + '?moodlewsrestformat=json&wsfunction=core_user_get_users_by_field' 
+	// 		+'&wstoken=' + core.session.token 
+	// 		+'&field=username&values[0]=' + core.session.username;
 
-		core.getJSON(url, function(state, data) {
-			moodle.disableLoading();
+	// 	core.getJSON(url, function(state, data) {
+	// 		moodle.disableLoading();
 		
-			if(state == responseState.ERROR) {
-				console.err('Couldn\'t receive data.');
-				return;
-			}
-			moodle.showTable(data, ['id', 'username', 'fullname']);
-		});
-	},
+	// 		if(state == responseState.ERROR) {
+	// 			console.err('Couldn\'t receive data.');
+	// 			return;
+	// 		}
+	// 		moodle.showTable(data, ['id', 'username', 'fullname']);
+	// 	});
+	// },
 
     assignments: function () {
         moodle.enableLoading('Loading user data ..');
 
-        var url = urls.api + '?moodlewsrestformat=json&wsfunction=mod_assign_get_assignments'
-            + '&wstoken=' + core.session.token;
+        var url = urls.api + '?moodlewsrestformat=json&wsfunction=mod_assign_get_assignments&wstoken=' + core.session.token;
 
         core.getJSON(url, function (state, data) {
             moodle.disableLoading();
@@ -181,7 +193,7 @@ var moodle = {
             }
 
 			// sort and convert timestamps to date
-            assignments.sort(sort_by('Fällig', false, parseInt));
+            assignments.sort(core.orderBy('Fällig', false, parseInt));
             for (var i = 0; i < assignments.length; i++)
             	assignments[i].Fällig = new Date(assignments[i].Fällig * 1000)
 
@@ -253,7 +265,7 @@ var moodle = {
 		moodle.enableLoading('Loading LVs ..');
 
 		var url = urls.api + '?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses'
-			+'&userid=314'
+			+'&userid=' + core.session.userid
 			+'&wstoken=' + core.session.token;
 
 		core.getJSON(url, function(state, data) {
