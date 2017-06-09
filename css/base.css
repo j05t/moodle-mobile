@@ -102,12 +102,17 @@ nav > ul {
 	nav > ul > li {
 		display: inline-block;
 	}
-	nav > ul > li > a {
+	nav > ul > li > a,
+	main > header > a {
 		display: block;
 		margin: 10px 20px 10px 0;
 	}
-	nav > ul > li > a > img {
+	nav > ul > li > a > img,
+	main > header > a > img {
 		height: 40px;
+	}
+	main > header > a {
+		float: right;
 	}
 
 .hide {
