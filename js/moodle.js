@@ -118,7 +118,7 @@ var moodle = {
                     var tdValue = document.createElement('td');
 
 					if (key == "Name")
-						tr.class = "assignmentheader";
+						tr.className = "assignmentheader";
 
 					tdKey.innerText = key;
                     tr.appendChild(tdKey);
