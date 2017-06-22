@@ -118,7 +118,7 @@ var moodle = {
                     var tdValue = document.createElement('td');
 
 					if (key == "Name")
-						tr.id = "assignmentheader"; // = "background-color: blue";
+						tr.class = "assignmentheader";
 
 					tdKey.innerText = key;
                     tr.appendChild(tdKey);
