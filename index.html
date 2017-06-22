@@ -12,8 +12,8 @@
   <body>
 		<main>
       <header>
-        <a href="#" onclick="moodle.logout(event);"><img src="img/exit.svg"/></a>
-        <img src="img/logo.svg"/>
+        <a href="#" onclick="moodle.logout(event);"><img alt="Exit" src="img/exit.svg"/></a>
+        <img alt="Logo" src="img/logo.svg"/>
       </header>
 
       <form onsubmit="moodle.authenticate(); return false;">
@@ -45,14 +45,14 @@
     <footer>
       <div class="container">
         <aside id="loading" class="hide">
-          <img src="img/ripple.svg"/>
+          <img alt="loading.." src="img/ripple.svg"/>
           <label id="state-text"></label>
         </aside>
         <nav id="navigation">
           <ul>
-            <li><a href="#" onclick="moodle.rooms(event);"><img src="img/skype.svg"/></a></li>
-            <li><a href="#" onclick="moodle.lvs(event);"><img src="img/assignments.svg"/></a></li>            
-            <li><a href="#" onclick="moodle.assignments(event);"><img src="img/home.svg"/></a></li>
+            <li><a href="#" onclick="moodle.rooms(event);"><img alt="Rooms" src="img/skype.svg"/></a></li>
+            <li><a href="#" onclick="moodle.lvs(event);"><img alt="Assignments" src="img/assignments.svg"/></a></li>
+            <li><a href="#" onclick="moodle.assignments(event);"><img alt="Home" src="img/home.svg"/></a></li>
           </ul>        
         </nav>
       </div>
