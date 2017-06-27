@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moodle Mobile</title>
 		<link rel="stylesheet" href="css/base.css" type="text/css" />
-		<link rel="stylesheet" href="css/spinner.css" type="text/css" />
 		<script src="js/core.js" defer></script>
-		<script src="js/moodle.js" defer></script>
+ 		<script src="js/view.js" defer></script>
+		<script src="js/controller.js" defer></script>
   </head>
   <body>
 		<main>
       <header>
-        <a href="#" onclick="moodle.logout(event);"><img alt="Exit" src="img/exit.svg"/></a>
+        <a href="#" onclick="controller.logout(event);"><img alt="Exit" src="img/exit.svg"/></a>
         <img alt="Logo" src="img/logo.svg"/>
       </header>
 
-      <form onsubmit="moodle.authenticate(); return false;">
+      <form onsubmit="controller.authenticate(event);">
         <div id="login" class="hide">
           <label>Username:</label>
           <input type="text" placeholder="Enter Username" id="username" value="" required>
@@ -30,29 +30,18 @@
       </form> 
 
       <div id="content"></div>
-
-      <div id="spinner-wrapper" class="hide">
-        <div class="spinner">
-          <div class="rect1"></div>
-          <div class="rect2"></div>
-          <div class="rect3"></div>
-          <div class="rect4"></div>
-          <div class="rect5"></div>
-        </div>
-      </div>
 		</main>
 
     <footer>
       <div class="container">
         <aside id="loading" class="hide">
           <img alt="loading.." src="img/ripple.svg"/>
-          <label id="state-text"></label>
         </aside>
         <nav id="navigation">
           <ul>
-            <li><a href="#" onclick="moodle.rooms(event);"><img alt="Rooms" src="img/skype.svg"/></a></li>
-            <li><a href="#" onclick="moodle.lvs(event);"><img alt="Assignments" src="img/assignments.svg"/></a></li>
-            <li><a href="#" onclick="moodle.assignments(event);"><img alt="Home" src="img/home.svg"/></a></li>
+            <li><a href="./index.html?page=rooms"><img alt="Rooms" src="img/skype.svg"/></a></li>
+            <li><a href="./index.html?page=files"><img alt="Assignments" src="img/assignments.svg"/></a></li>
+            <li><a href="./index.html"><img alt="Home" src="img/home.svg"/></a></li>
           </ul>        
         </nav>
       </div>

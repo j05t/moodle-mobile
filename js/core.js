@@ -1,12 +1,15 @@
-function isEmpty(text) {
-	return (!text || 0 === text.trim().length);
-}
-
 var responseState = {
 	UNKNOWN: "UNKNOWN",
 	SUCCESS: "SUCCESS",
 	ERROR: 	 "ERROR"
 };
+
+// https://stackoverflow.com/questions/2998784/how-to-output-integers-with-leading-zeros-in-javascript
+Number.prototype.pad = function(size) {
+	var s = String(this);
+	while (s.length < (size || 2)) {s = "0" + s;}
+	return s;
+}
 
 var core = {
 	session: null,
@@ -33,6 +36,20 @@ var core = {
 			}
 		};
 		xhr.send();
+	},
+
+		
+	getJSONSynchronous: function(url, callback, element) {
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', url, false);
+		xhr.send();
+
+		var status = xhr.status;
+		if (status == 200) {
+			callback(responseState.SUCCESS, xhr.response, element);
+		} else {
+			callback(responseState.ERROR, null, element);
+		}
 	},
 	
 	redirect: function(url) {
@@ -96,5 +113,8 @@ var core = {
 		if (!results) return null;
 		if (!results[2]) return '';
 		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	},
+	isEmpty: function(text) {
+		return (!text || 0 === text.trim().length);
 	}
 };

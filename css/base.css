@@ -240,3 +240,35 @@ nav > ul {
 .assignmentheader {
 	background-color: aquamarine;
 }
+
+
+.list-item > header {
+	font-weight: bold;
+	font-size: 1.2em;
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin: 10px 0;
+	cursor: pointer;
+}
+.list-item > header > .header-info {
+	float: right;
+	font-size: 0.9em;
+}
+.list-item > div {
+	display: none;
+	margin: 0 0 5px 0;
+	padding: 10px;
+	border: 1px solid #ccc;
+	font-weight: normal;
+}
+.list-item.expanded > div {
+	display: block;
+}
+.list-item > div > a {
+	color: black;
+}
+.error {
+	font-weight: bold;
+	text-align: center;
+	margin: 20px;
+}
