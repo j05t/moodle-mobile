@@ -1,50 +1,56 @@
 <!doctype html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moodle Mobile</title>
-    <!-- minified CSS -->
-		<link rel="stylesheet" href="css/base.min.css" type="text/css" />
-    <!-- combines all js files in compressed form -->
-		<script src="js/moodle.min.js" defer></script>
-  </head>
-  <body>
-		<main>
-      <header>
-        <a href="#" onclick="controller.logout(event);"><img alt="Exit" src="img/exit.svg"/></a>
-        <img alt="Logo" src="img/logo.svg"/>
-      </header>
 
-      <form onsubmit="controller.authenticate(event);">
-        <div id="login" class="hide">
-          <label>Username:</label>
-          <input type="text" placeholder="Enter Username" id="username" value="" required>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moodle Mobile</title>
+  <!-- minified CSS -->
+  <link rel="stylesheet" href="css/base.min.css" type="text/css" />
+  <!-- combines all js files in compressed form -->
+  <!--<script src="js/moodle.min.js" defer></script>-->
+  <script src="js/core.js" defer></script>
+  <script src="js/view.js" defer></script>
+  <script src="js/controller.js" defer></script>
+</head>
 
-          <label>Password:</label>
-          <input type="password" placeholder="Enter Password" id="password" value="" required>
+<body>
+  <main>
+    <header>
+      <a href="#" onclick="controller.logout(event);"><img alt="Exit" src="img/exit.svg"/></a>
+      <img alt="Logo" src="img/logo.svg" />
+    </header>
 
-          <button type="submit">Login</button>
-          <label id="login-error"></label>
-        </div> 
-      </form> 
+    <form onsubmit="controller.authenticate(event);">
+      <div id="login" class="hide">
+        <label>Username:</label>
+        <input type="text" placeholder="Enter Username" id="username" value="" required>
 
-      <div id="content"></div>
-		</main>
+        <label>Password:</label>
+        <input type="password" placeholder="Enter Password" id="password" value="" required>
 
-    <footer>
-      <div class="container">
-        <aside id="loading" class="hide">
-          <img alt="loading.." src="img/ripple.svg"/>
-        </aside>
-        <nav id="navigation">
-          <ul>
-            <li><a href="./index.html?page=rooms"><img alt="Rooms" src="img/skype.svg"/></a></li>
-            <li><a href="./index.html?page=files"><img alt="Assignments" src="img/assignments.svg"/></a></li>
-            <li><a href="./index.html"><img alt="Home" src="img/home.svg"/></a></li>
-          </ul>        
-        </nav>
+        <button type="submit">Login</button>
+        <label id="login-error"></label>
       </div>
-    </footer>
-  </body>
+    </form>
+
+    <div id="content"></div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <aside id="loading" class="hide">
+        <img alt="loading.." src="img/ripple.svg" />
+      </aside>
+      <nav id="navigation">
+        <ul>
+          <li><a href="./index.html?page=rooms"><img alt="Rooms" src="img/skype.svg"/></a></li>
+          <li><a href="./index.html?page=files"><img alt="Assignments" src="img/assignments.svg"/></a></li>
+          <li><a href="./index.html"><img alt="Home" src="img/home.svg"/></a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+
 </html>

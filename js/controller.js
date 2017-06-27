@@ -104,7 +104,7 @@ var controller = {
 
         // set offline model first
         var offlineModel = localStorage.getItem('model.home');
-        if(offlineModel) {
+        if (offlineModel) {
             view.list(JSON.parse(offlineModel));
         }
 
@@ -148,10 +148,9 @@ var controller = {
             for (var i = 0; i < assignments.length; i++) {
                 var assignment = assignments[i];
                 var date = assignment.date;
-                var dateStr = date.getDay().pad() + '.' + date.getMonth().pad() + '. ' + date.getHours().pad() + ':' + date.getMinutes().pad();
 
                 model.push({
-                    title: dateStr + ' | ' + assignment.name,
+                    title: date.ddmmyyyy() + ' | ' + assignment.name,
                     childs: [{
                         content: assignment.description,
                         isHtml: true
@@ -160,7 +159,7 @@ var controller = {
             }
 
             // save model to offline storage
-            localStorage.setItem('model.home',JSON.stringify(model));
+            localStorage.setItem('model.home', JSON.stringify(model));
 
             view.list(model);
         });
@@ -171,7 +170,7 @@ var controller = {
 
         // set offline model first
         var offlineModel = localStorage.getItem('model.rooms');
-        if(offlineModel) {
+        if (offlineModel) {
             view.list(JSON.parse(offlineModel));
         }
 
@@ -219,7 +218,7 @@ var controller = {
                 }
             }
 
-            localStorage.setItem('model.rooms',JSON.stringify(model));
+            localStorage.setItem('model.rooms', JSON.stringify(model));
 
             view.list(model);
         });
@@ -230,7 +229,7 @@ var controller = {
 
         // set offline model first
         var offlineModel = localStorage.getItem('model.files');
-        if(offlineModel) {
+        if (offlineModel) {
             view.list(JSON.parse(offlineModel));
         }
 
@@ -279,10 +278,10 @@ var controller = {
                     + '&wstoken=' + core.session.token;
 
                 core.getJSON(detailsUrl, function (state, data, element) {
-                    
+
                     numberOfLoadedLvs++;
 
-                    if(numberOfLvs === numberOfLoadedLvs) {
+                    if (numberOfLvs === numberOfLoadedLvs) {
                         view.disableLoading();
                     }
 
@@ -302,16 +301,16 @@ var controller = {
                             numberOfItems++;
 
                             var content = module.contents[0];
-                            
+
                             element.childs.push({
                                 content: content.filename,
                                 url: content.fileurl + '&token=' + core.session.token
                             });
                         }
                     }
-                                        
-                    if(numberOfLvs === numberOfLoadedLvs) {
-                        localStorage.setItem('model.files',JSON.stringify(model));
+
+                    if (numberOfLvs === numberOfLoadedLvs) {
+                        localStorage.setItem('model.files', JSON.stringify(model));
                         view.list(model);
                     }
                 }, listItem);

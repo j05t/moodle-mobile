@@ -1,33 +1,54 @@
 var responseState = {
 	UNKNOWN: "UNKNOWN",
 	SUCCESS: "SUCCESS",
-	ERROR: 	 "ERROR"
+	ERROR: "ERROR"
 };
 
 // https://stackoverflow.com/questions/2998784/how-to-output-integers-with-leading-zeros-in-javascript
-Number.prototype.pad = function(size) {
+Number.prototype.pad = function (size) {
 	var s = String(this);
-	while (s.length < (size || 2)) {s = "0" + s;}
+	while (s.length < (size || 2)) { s = "0" + s; }
 	return s;
 }
 
+// https://stackoverflow.com/questions/3066586/get-string-in-yyyymmdd-format-from-js-date-object
+Date.prototype.ddmmyyyy = function () {
+	var mm = this.getMonth() + 1; // getMonth() is zero-based
+	var dd = this.getDate();
+	var HH = this.getHours();
+	var min = this.getMinutes();
+
+	var date =
+		[(dd > 9 ? '' : '0') + dd,
+		(mm > 9 ? '' : '0') + mm,
+		this.getFullYear()
+		].join('.');
+
+	var time =
+		[(HH > 9 ? '' : '0') + HH,
+		(min > 9 ? '' : '0') + min
+		].join(':');
+
+	return date + ' ' + time;
+};
+
 var core = {
 	session: null,
-	init: function() {
+	init: function () {
 		core.session = null;
 
-		if(typeof(Storage) !== "undefined") {
+		if (typeof (Storage) !== "undefined") {
 			core.session = sessionStorage;
 			return;
 		}
 		console.err("Couldn't init storage.");
 	},
-	
-	getJSON: function(url, callback, element) {
+
+	getJSON: function (url, callback, element) {
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url, true);
 		xhr.responseType = 'json';
-		xhr.onload = function() {
+		xhr.onload = function () {
 			var status = xhr.status;
 			if (status == 200) {
 				callback(responseState.SUCCESS, xhr.response, element);
@@ -38,8 +59,8 @@ var core = {
 		xhr.send();
 	},
 
-		
-	getJSONSynchronous: function(url, callback, element) {
+
+	getJSONSynchronous: function (url, callback, element) {
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url, false);
 		xhr.send();
@@ -51,41 +72,41 @@ var core = {
 			callback(responseState.ERROR, null, element);
 		}
 	},
-	
-	redirect: function(url) {
+
+	redirect: function (url) {
 		window.location = url;
 	},
-	reload: function() {
+	reload: function () {
 		window.location.reload();
-	},	
-	getValue: function(id) {
+	},
+	getValue: function (id) {
 		return document.getElementById(id).value.trim();
 	},
-	getText: function(id) {
+	getText: function (id) {
 		return document.getElementById(id).innerText.trim();
 	},
-	setText: function(id, text) {
+	setText: function (id, text) {
 		return document.getElementById(id).innerText = text;
 	},
-	getHtml: function(id) {
+	getHtml: function (id) {
 		return document.getElementById(id).innerHTML;
 	},
-	setHtml: function(id, html) {
+	setHtml: function (id, html) {
 		return document.getElementById(id).innerHTML = html;
 	},
-	addClass: function(id, classname) {
+	addClass: function (id, classname) {
 		document.getElementById(id).classList.add(classname);
 	},
-	removeClass: function(id, classname) {
+	removeClass: function (id, classname) {
 		document.getElementById(id).classList.remove(classname);
 	},
-	show: function(id) {
+	show: function (id) {
 		core.removeClass(id, 'hide');
 	},
-	hide: function(id) {
+	hide: function (id) {
 		core.addClass(id, 'hide');
 	},
-	
+
 	orderBy: function (field, reverse, primer) {
 		var key = primer ?
 			function (x) {
@@ -103,7 +124,7 @@ var core = {
 	},
 
 	// https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-	getParameterByName: function(name, url) {
+	getParameterByName: function (name, url) {
 		if (!url) {
 			url = window.location.href;
 		}
@@ -114,7 +135,7 @@ var core = {
 		if (!results[2]) return '';
 		return decodeURIComponent(results[2].replace(/\+/g, " "));
 	},
-	isEmpty: function(text) {
+	isEmpty: function (text) {
 		return (!text || 0 === text.trim().length);
 	}
 };
