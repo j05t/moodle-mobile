@@ -11,6 +11,8 @@ var view = {
     },
 
     list: function(model) {
+        view.$content.innerHTML = '';
+
         for(var i = 0; i < model.length; i++) {
             var listItem = model[i];           
             var $listItem = listItem.$listItem;
@@ -26,11 +28,6 @@ var view = {
             $header.onclick = function() {
                 this.parentElement.classList.toggle('expanded')
             };
-
-            // add header info span
-            var $span = document.createElement('span');
-            $span.classList.add('header-info');
-            $header.appendChild($span);
 
             // append header to list-item
             $listItem.appendChild($header);

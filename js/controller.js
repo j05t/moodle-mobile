@@ -102,6 +102,12 @@ var controller = {
     home: function () {
         view.enableLoading();
 
+        // set offline model first
+        var offlineModel = localStorage.getItem('model.home');
+        if(offlineModel) {
+            view.list(JSON.parse(offlineModel));
+        }
+
         var url = controller.urls.api
             + '?moodlewsrestformat=json&wsfunction=mod_assign_get_assignments&wstoken='
             + core.session.token;
@@ -153,12 +159,21 @@ var controller = {
                 });
             }
 
+            // save model to offline storage
+            localStorage.setItem('model.home',JSON.stringify(model));
+
             view.list(model);
         });
     },
 
     rooms: function () {
         view.enableLoading();
+
+        // set offline model first
+        var offlineModel = localStorage.getItem('model.rooms');
+        if(offlineModel) {
+            view.list(JSON.parse(offlineModel));
+        }
 
         var url = controller.urls.api
             + '?moodlewsrestformat=json&wsfunction=core_course_get_contents'
@@ -204,12 +219,20 @@ var controller = {
                 }
             }
 
+            localStorage.setItem('model.rooms',JSON.stringify(model));
+
             view.list(model);
         });
     },
 
     files: function () {
         view.enableLoading();
+
+        // set offline model first
+        var offlineModel = localStorage.getItem('model.files');
+        if(offlineModel) {
+            view.list(JSON.parse(offlineModel));
+        }
 
         var url = controller.urls.api
             + '?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses'
@@ -219,8 +242,6 @@ var controller = {
         var model = [];
 
         core.getJSON(url, function (state, data) {
-            view.disableLoading();
-
             if (state == responseState.ERROR) {
                 view.error();
                 return;
@@ -235,17 +256,20 @@ var controller = {
                 'Online Rooms',
                 'Support'];
 
+            var numberOfLvs = data.length - ignoredLvs.length;
+            var numberOfLoadedLvs = 0;
+
             for (var i = 0; i < data.length; i++) {
                 var lv = data[i];
 
                 // skip ignored lvs
-                if (ignoredLvs.includes(lv.fullname))
+                if (ignoredLvs.includes(lv.fullname)) {
                     continue;
+                }
 
                 var listItem = {
                     title: lv.fullname,
-                    childs: [],
-                    $listItem: document.createElement('div')
+                    childs: []
                 };
                 model.push(listItem);
 
@@ -255,6 +279,13 @@ var controller = {
                     + '&wstoken=' + core.session.token;
 
                 core.getJSON(detailsUrl, function (state, data, element) {
+                    
+                    numberOfLoadedLvs++;
+
+                    if(numberOfLvs === numberOfLoadedLvs) {
+                        view.disableLoading();
+                    }
+
                     if (state == responseState.ERROR) {
                         return;
                     }
@@ -269,29 +300,22 @@ var controller = {
                                 continue;
 
                             numberOfItems++;
+
+                            var content = module.contents[0];
                             
-                            var contents = module.contents[0];
-
-                            var $child = document.createElement('div');
-                            $child.classList.add('list-item-child');
-
-                            var $a = document.createElement('a');
-                            $a.innerText = contents.filename;
-                            $a.href = contents.fileurl + '&token=' + core.session.token;
-                            $a.target = '_blank';
-                            $child.appendChild($a);
-
-                            element.appendChild($child);
+                            element.childs.push({
+                                content: content.filename,
+                                url: content.fileurl + '&token=' + core.session.token
+                            });
                         }
                     }
                                         
-                    // set header info
-                    element.getElementsByClassName('header-info')[0].innerText = numberOfItems;
-
-                }, listItem.$listItem);
+                    if(numberOfLvs === numberOfLoadedLvs) {
+                        localStorage.setItem('model.files',JSON.stringify(model));
+                        view.list(model);
+                    }
+                }, listItem);
             }
-
-            view.list(model);
         });
     },
 };
