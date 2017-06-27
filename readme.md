@@ -7,6 +7,10 @@ Repository:
 
 https://github.com/mujicnev15/swd2015-ri-moodle
 
+Online URL:
+
+http://moodle-mobile.azurewebsites.net/
+
 Setup:
 
 - nothing to do, just checkout from git
